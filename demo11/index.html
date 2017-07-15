@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="../build/react.js"></script>
+		<script src="../build/react-dom.js"></script>
+		<script src="../build/browser.min.js"></script>
+		<script src="../build/jquery.min.js"></script>
+	</head>
+	<body>
+		<div id="example"></div>
+		<script type="text/babel">
+		    var UserGist = React.createClass({
+		    	getInitialState: function(){
+		    		return {
+		    			username: '',
+		    			lastGistUrl: ''
+		    		};
+		    	},
+
+		    	componentDidMount: function(){
+		    		var serverRequest = $.get(this.props.source, function(result){
+		    			var lastGist = result[0];
+		    			this.setState({
+		    				username: lastGist.owner.login,
+		    				lastGistUrl: lastGist.html_url
+		    			});
+		    		}.bind(this));
+		    	},
+                
+                // 当异步加载数据的时候，在组件卸载之前，使用 componentWillUnmount 来取消任何未完成的请求
+		    	componentWillUnmount: function(){
+		    		this.serverRequest.abort();      // abort()：终止程序
+		    	},
+
+		    	render: function(){
+		    		return (
+		    			<div>
+                            {this.state.username}用户最新Gist的共享地址：<a href={this.state.lastGistUrl}>{this.state.lastGistUrl}</a>
+		    			</div>
+		    		);
+		    	}
+		    });
+
+		    ReactDOM.render(
+		    	<UserGist source = "https://api.github.com/users/octocat/gists" />,
+		    	document.body
+		    );
+		</script>
+	</body>
+</html>

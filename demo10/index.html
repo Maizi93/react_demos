@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <!-- 事先加载三个库 -->
+		<script src="../build/react.js"></script>
+		<script src="../build/react-dom.js"></script>
+		<script src="../build/browser.min.js"></script>
+	</head>
+	<body>
+		<div id="example"></div>
+		<script type="text/babel">
+		    var Hello = React.createClass({
+		    	getInitialState: function(){
+		    		return {opacity: 1.0};
+		    	},
+                
+                // 插入真实DOM之后，调用该函数
+		    	componentDidMount: function(){
+		    		this.timer = setInterval(function(){
+		    			var opacity = this.state.opacity;
+		    			opacity -= 0.05;
+		    			if(opacity < 0.1){
+		    				opacity = 1.0;
+		    			}
+		    			this.setState({opacity: opacity});
+		    		}.bind(this),100);   // bind用于改变this的指向
+		    	},
+		    	
+		    	render: function(){
+		    		return(
+		    			<div style={{opacity: this.state.opacity}}>
+		    			    Hello {this.props.name}
+		    			</div>
+		    		);
+		    	}
+		    });
+
+		    ReactDOM.render(
+		    	<Hello name="world" />,
+		    	document.getElementById("example")
+		    );
+		</script>
+	</body>
+</html>
